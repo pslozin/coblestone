@@ -62,13 +62,7 @@ const pizza_orders = sequelize.define("pizza_orders", {
 
 function createRows(arr)
 {
-    let myArry = [
-
-        { user_id: 5, first_name: "TEST", last_name: 'Slozin', order_id: 6, item_id: 7, total_price: 25, status: 'received'},
-        { user_id: 5, first_name: "Svetlana", last_name: 'Slozina', order_id: 6, item_id: 7, total_price: 25, status: 'received'},
-        { user_id: 5, first_name: "Sasha", last_name: 'Slozina', order_id: 6, item_id: 7, total_price: 25, status: 'received'}
-   
-    ]
+  
     pizza_orders.bulkCreate(arr).then(() => console.log("Users data have been saved"));
     console.log("Bulk create")
 
@@ -194,7 +188,7 @@ app.post('/addmenuitem',(req,res)=>{
 app.post('/createorder',(req,res)=>{
 
     console.log(req.body)
-    //createRows(req.body)
+    createRows(req.body)
 
 })
 

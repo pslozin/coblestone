@@ -6,8 +6,8 @@ getMenubtn.addEventListener('click',getpizzaitems)
 
 //--------Buttons and Listeners for Create order
 orderBtn = document.getElementById('orderBtn')
-custFirstname = document.querySelector('firstName')
-custLastname = document.querySelector('lastName')
+custFirstname = document.querySelector('#firstName')
+custLastname = document.querySelector('#lastName')
 
 orderBtn.addEventListener('click', collectOrderinfo)
 let orderId = Math.floor(Math.random() * 8896);
@@ -24,7 +24,8 @@ let numberOfitems = 0 // used to get number of DB items to run a loop later
 
 function getpizzaitems()
 {
-axios.get('/getpizzaitems').then(function(response) {
+    getMenubtn.disabled = true;  //Disabling menu population once its shown
+    axios.get('/getpizzaitems').then(function(response) {
 
     numberOfitems = response.data.length // assign DB length
 
@@ -59,14 +60,12 @@ axios.get('/getpizzaitems').then(function(response) {
 
 function collectOrderinfo()
 {
+    orderBtn.disabled = true; 
 
-    var orderBody = []
+    cfname = custFirstname.value
+    clname = custLastname.value
 
-    //{user_id: 5, first_name: “”, last_name: “”, order_id: 6, item_id: 7, total_price: 25,  status, },
-    
-    // for (var n = 0; n < arr.length; n++) {
-    // arr[n] = {color: null, size: null, type: null}
-    // }
+    let orderBody = [] // Array to pass to db
 
     itemprice = document.querySelectorAll('#price')
     tablecontent = document.querySelectorAll("#qitems");
@@ -74,23 +73,27 @@ function collectOrderinfo()
     
     let totalPrice = 0
     let status = 0
-    
-    console.log("Value of 4th = ", parseInt(tablecontent[4].value))
+    orderBobyinit = 0 // Init for Array Of Obj
 
-    for(i = 0; i < tablecontent.length; i++ ){
-        if(tablecontent[i].value != 0  )
+
+    for(i = 0; i < tablecontent.length; i++ )
+    {
+        if(tablecontent[i].value !== "")
         {
-        console.log("Order for", orderId, "Ordered",itemname[i].innerText,"Quantity",tablecontent[i].value, "Price", itemprice[i].innerText )
-        
-        orderBody[i] = {user_id: userId, first_name: null, last_name: null, 
-            order_id: orderId, item_id: null, total_price: null, status: null }
-        
+        console.log("Order for - ", orderId, "Ordered :",itemname[i].innerText,"Quantity - ",
+        tablecontent[i].value, "Price per Item - ", itemprice[i].innerText )
+
         totalPrice = totalPrice + parseFloat(itemprice[i].innerText)*(tablecontent[i].value)
+        
+        orderBody[orderBobyinit] = {user_id: userId, first_name: cfname, last_name: clname, 
+            order_id: orderId, item_id: null, total_price: totalPrice, status: "received" }
+            orderBobyinit ++   
         }
         
     }
-    console.log("Total price of the order - ",totalPrice)
-    console.log(orderBody)
 
-    axios.post('/createorder',orderBody)   //calling Bulk Create on Server side
+    console.log("Total price of the order - ",totalPrice)
+    //console.log(orderBody)
+
+    axios.post('/createorder',orderBody)   //calling Bulk_Create on Server side
 }
