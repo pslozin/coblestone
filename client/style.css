@@ -1,0 +1,29 @@
+body {
+    background-color: aqua;
+  }
+
+  input {
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+  }
+
+ 
+button{
+  min-height:30px; 
+    min-width: 120px;
+}
+
+#listnames {
+  position: absolute;
+  top: 500 px;
+  left: 200;
+  background-color: brown;
+
+}
+
+#qitems{
+  background-color: white;
+  width: 100px;
+}
