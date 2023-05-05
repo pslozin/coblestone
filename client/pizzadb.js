@@ -6,20 +6,26 @@ table = document.getElementById('pizzstoreitems')
 getpizzaitemsbutton.addEventListener('click', getpizzaitems)
 addItemtomenu.addEventListener('click',addNewitems)
 
+
+
+//---------------FUNCTIONS------------------------
+
 function getpizzaitems()
 {
-axios.get('/getpizzaitems').then(function(response) {
+
+    getpizzaitemsbutton.disabled = true;
+    axios.get('/getpizzaitems').then(function(response) {
 
     //==========working FOREACH ============
-    response.data.forEach((item_id,index)  => {
+    // response.data.forEach((item_id,index)  => {
         
-        console.log(response.data[index].item_id)
+    //     console.log(response.data[index].item_id)
         
-    });
+    // });
     //===================================
+
     for(i = 0; i < response.data.length; i++)
     {
-        
         
         var newRow = table.insertRow(-1);
 
@@ -71,12 +77,13 @@ function addNewitems()
         console.log("Rceived FROM SERVER", body)
 })
     }
-    
 }
 
-
-// function addItemtomenu()
-// {
-//     const itemdiv = document.getElementById('addpizzaitems')
-
-// }
+function seeOrders()
+{
+    axios.get('/seeorders')
+    .then((response) => {
+        console.log(response.data)
+        displayNames(response.data)
+    })
+}

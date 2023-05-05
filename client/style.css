@@ -27,3 +27,20 @@ button{
   background-color: white;
   width: 100px;
 }
+
+.vl {
+  border-left: 1px solid green;
+  height: 700px;
+  position: absolute;
+  left: 50%;
+  margin-left: -3px;
+  top: 0;
+}
+
+#orders{
+  position: absolute;
+  top: 10px;
+  left: 520px;
+  width: 300px;
+  border: 1px solid;
+}

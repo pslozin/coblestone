@@ -1,3 +1,4 @@
+//----V3-----------
 //------ Buttons and Listenesr for GET Menu
 
 getMenubtn = document.getElementById('getMenu')
@@ -43,6 +44,7 @@ function getpizzaitems()
 
         var cell1 = newRow.insertCell(0);
         cell1.innerHTML = response.data[i].item_id;
+        cell1.id = 'item_id'
         var cell2 = newRow.insertCell(1);
         cell2.innerHTML = response.data[i].name;
         cell2.id = 'item_name'
@@ -70,24 +72,34 @@ function collectOrderinfo()
     itemprice = document.querySelectorAll('#price')
     tablecontent = document.querySelectorAll("#qitems");
     itemname = document.querySelectorAll('#item_name')
+    itemId = document.querySelectorAll('#item_id')
     
     let totalPrice = 0
+    let totalPriceperorder = 0
     let status = 0
     orderBobyinit = 0 // Init for Array Of Obj
 
+    console.log(itemId[1].innerHTML)
 
     for(i = 0; i < tablecontent.length; i++ )
     {
         if(tablecontent[i].value !== "")
         {
-        console.log("Order for - ", orderId, "Ordered :",itemname[i].innerText,"Quantity - ",
+        console.log("Order for - ", orderId, "Ordered :",itemname[i].innerText, "ID: - ", itemId[i].innerHTML, "Quantity - ",
         tablecontent[i].value, "Price per Item - ", itemprice[i].innerText )
 
-        totalPrice = totalPrice + parseFloat(itemprice[i].innerText)*(tablecontent[i].value)
-        
+        item_id = itemname[i].innerHTML // item Name
+        quantity = tablecontent[i].value // Quantity
+
+        totalPrice = totalPrice + parseFloat(itemprice[i].innerText)*quantity
+
+        totalPriceperorder = totalPriceperorder + parseFloat(itemprice[i].innerText)*(tablecontent[i].value)
         orderBody[orderBobyinit] = {user_id: userId, first_name: cfname, last_name: clname, 
-            order_id: orderId, item_id: null, total_price: totalPrice, status: "received" }
-            orderBobyinit ++   
+            order_id: orderId, item_id: item_id, total_price: totalPriceperorder, 
+            quantity: quantity, status: "received" }
+            orderBobyinit ++
+            totalPriceperorder = 0
+            
         }
         
     }

@@ -1,3 +1,5 @@
+//----V3-------------------
+
 const express = require('express')
 const cors = require('cors')
 const { Sequelize } = require('sequelize')
@@ -41,10 +43,13 @@ const pizza_orders = sequelize.define("pizza_orders", {
         type: Sequelize.INTEGER
     },
     item_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
     },
     total_price: {
         type: Sequelize.INTEGER
+    },
+    quantity: {
+        type: Sequelize.STRING
     },
     status: {
         type: Sequelize.STRING
@@ -189,6 +194,19 @@ app.post('/createorder',(req,res)=>{
 
     console.log(req.body)
     createRows(req.body)
+
+})
+
+
+app.get('/seeorders',(req,res)=>{
+    sequelize.query(`
+    select * from pizza_orders
+                `).then((dbRes) => {
+                    console.log('REQUESTING ORDERS')
+                        console.log(dbRes[0])
+                        res.status(200).send(dbRes[0])
+                   
+                })
 
 })
 
