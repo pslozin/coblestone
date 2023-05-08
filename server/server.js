@@ -1,4 +1,4 @@
-//----V3-------------------
+//----V5-------------------
 
 const express = require('express')
 const cors = require('cors')
@@ -9,21 +9,6 @@ const path = require('path')
 const app = express()
 app.use(express.json());
 app.use(express.static('../client'))
-
-
-//====RollBar
-
-// var Rollbar = require('rollbar')
-// var rollbar = new Rollbar({
-//   accessToken: '298582e681464133b9d611296c799c24',
-//   captureUncaught: true,
-//   captureUnhandledRejections: true,
-// })
-
-
-// rollbar.log('Hello world!')
-
-//============
 
 
 //-------Creating order model----------
@@ -60,10 +45,6 @@ const pizza_orders = sequelize.define("pizza_orders", {
   });
 
 
-//----------END------------------------
-
-
-//----------------------------------
 
 function createRows(arr)
 {
@@ -77,7 +58,6 @@ function createRows(arr)
 
 console.log("PATH", __dirname)
 
-//createRows()
 
 app.get('/', function(req, res){
    
@@ -169,8 +149,6 @@ app.get('/getpizzaitems', (req,res)=>{
 
 })})
 
-
-
 app.post('/addmenuitem',(req,res)=>{
     let {newItemname,newItemprice} = req.body
     
@@ -181,8 +159,6 @@ app.post('/addmenuitem',(req,res)=>{
         ('${newItemname}','${newItemprice}')
         
     `)
-
-    
 
     console.log("Adding new item to DB", newItemname,newItemprice)
     res.status(200).send('SERVER RESPONSE')
@@ -200,9 +176,56 @@ app.post('/createorder',(req,res)=>{
 
 app.get('/seeorders',(req,res)=>{
     sequelize.query(`
-    select * from pizza_orders
+    select user_id, item_id, 
+    quantity, status from pizza_orders
                 `).then((dbRes) => {
                     console.log('REQUESTING ORDERS')
+                        console.log(dbRes[0])
+                        res.status(200).send(dbRes[0])
+                   
+                })
+
+})
+
+app.delete('/deletefrommenu/:index',(req,res) => {
+    let { index } = req.params
+
+    sequelize.query(`
+    delete from pizzastoreitems 
+    where item_id = '${index}'
+                `)
+
+    console.log("SERVER",index)
+    
+    res.status(200).send(index)
+})
+
+app.get('/orderstatus/:index',(req,res) => {
+    let { index } = req.params
+
+    console.log(index)
+    sequelize.query(`
+    select status from pizza_orders 
+    where order_id = '${index}'
+                `).then((dbRes) => {
+                    console.log('REQUESTING ORDERS')
+                        console.log(dbRes[0])
+                        res.status(200).send(dbRes[0])
+                   
+                })
+
+})
+
+app.put('/orderstatus/:index',(req,res) => {
+    let { index } = req.params
+
+    console.log(index)
+    sequelize.query(`
+    UPDATE pizza_orders
+    SET status = 'READY'
+    where order_id = '${index}'
+                `).then((dbRes) => {
+                    console.log('CHANGING STATUS of ', index)
                         console.log(dbRes[0])
                         res.status(200).send(dbRes[0])
                    

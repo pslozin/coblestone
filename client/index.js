@@ -1,4 +1,4 @@
-//----V3-----------
+//----V5-----------
 //------ Buttons and Listenesr for GET Menu
 
 getMenubtn = document.getElementById('getMenu')
@@ -20,6 +20,14 @@ table = document.getElementById('menuTable')
 //tablecontent = document.querySelectorAll('qitems')
 //---------------------END---------------------------
 
+//--- TEST-------
+// orderCo = document.getElementById('orderConfirm')
+// orderCo.addEventListener('click',e => {
+//     orderConfirmed(e,orderId)
+// })
+
+//----END TEST---
+
 let numberOfitems = 0 // used to get number of DB items to run a loop later
 
 
@@ -30,13 +38,7 @@ function getpizzaitems()
 
     numberOfitems = response.data.length // assign DB length
 
-    //==========working FOREACH ============
-    // response.data.forEach((item_id,index)  => {
-        
-    //     console.log(response.data[index].item_id)
-        
-    // });
-    //===================================
+
     for(i = 0; i < response.data.length; i++)
     {
    
@@ -60,7 +62,7 @@ function getpizzaitems()
 })
 }
 
-function collectOrderinfo()
+function collectOrderinfo() // Collecting order details to be sent to Orders DB
 {
     orderBtn.disabled = true; 
 
@@ -101,11 +103,77 @@ function collectOrderinfo()
             totalPriceperorder = 0
             
         }
-        
     }
 
     console.log("Total price of the order - ",totalPrice)
-    //console.log(orderBody)
 
     axios.post('/createorder',orderBody)   //calling Bulk_Create on Server side
+
+    orderConfirmed(orderId)
+}
+
+function orderConfirmed(ordId)
+{
+        //console.log(ordId)
+       // ordId = 565
+        let sts = ""
+
+        axios.get(`/orderstatus/${ordId}`)
+       
+        .then((response) => {
+        console.log("STATUS CHECK",response.data[0])
+        sts = response.data[0].status
+        createDiv(sts,ordId)
+        //console.log("LOOK",sts)
+    })
+   
+        
+    }
+
+function createDiv(string,int)    //Creating DIV to display order N and Status
+{
+        console.log("Create DIV",string)
+        var div = document.createElement('div');
+        var checkStatusBtn = document.createElement('button')
+        var statusField = document.createElement("span")
+        statusField.innerHTML = string
+        checkStatusBtn.textContent = "check status"
+
+        div.id = "confirm_order"
+        div.innerHTML = "<BR><BR>Your Order N is <BR><BR>" + int
+         + "<BR><BR>Staus..." + string + "<BR></BR>"
+
+        
+        document.body.appendChild(div);
+        div.appendChild(checkStatusBtn)
+
+       div.appendChild(statusField)
+
+        checkStatusBtn.addEventListener('click', (e)=>{
+            console.log("Checking status - ", int)
+
+            //-----------
+            axios.get(`/orderstatus/${int}`)
+       
+            .then((response) => {
+                updateDiv(response.data[0])
+          
+            //console.log("STATUS CHECK HERE AGAIN",response.data[0])
+           
+            //statusField.innerHTML = "OK"
+        })
+         
+
+        })
+
+
+}
+
+function updateDiv(arr)
+{
+    console.log("STATUS CHECK HERE AGAIN",arr)
+    statusField = document.querySelector('span')
+    statusField.innerHTML = arr.status
+   //console.log("yu",arr.status)
+
 }

@@ -41,6 +41,36 @@ button{
   position: absolute;
   top: 10px;
   left: 520px;
-  width: 300px;
+  width: 400px;
   border: 1px solid;
+}
+
+.bot-card {
+  width: 225px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0 15px 0 15px;
+  position: relative;
+  background: white;
+}
+
+#confirm_order
+{
+  position: absolute;
+  text-align: center;
+  
+  top: 70px;
+  left: 520px;
+  width: 300px;
+  height: 250px;
+  border: 3px solid;
+  
+  background-color: rgb(234, 234, 238);
+}
+
+#menuItems
+{
+  background-color:aquamarine
 }
