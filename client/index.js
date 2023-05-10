@@ -1,4 +1,4 @@
-//----V5-----------
+//----V6-----------5/10/23
 //------ Buttons and Listenesr for GET Menu
 
 getMenubtn = document.getElementById('getMenu')
@@ -20,13 +20,16 @@ table = document.getElementById('menuTable')
 //tablecontent = document.querySelectorAll('qitems')
 //---------------------END---------------------------
 
-//--- TEST-------
-// orderCo = document.getElementById('orderConfirm')
-// orderCo.addEventListener('click',e => {
-//     orderConfirmed(e,orderId)
-// })
+//----------order search
 
-//----END TEST---
+searchinput = document.querySelector('#searchbylastname')
+searchbutton = document.getElementById('searchorderbtn')
+
+searchbutton.addEventListener('click',ordersearch)
+
+//-----------------------
+
+
 
 let numberOfitems = 0 // used to get number of DB items to run a loop later
 
@@ -64,10 +67,15 @@ function getpizzaitems()
 
 function collectOrderinfo() // Collecting order details to be sent to Orders DB
 {
-    orderBtn.disabled = true; 
-
+    
     cfname = custFirstname.value
     clname = custLastname.value
+
+    // if(custFirstname.value.length === 0 ||custLastname.value.length === 0 )
+    // alert("first or last name is empty ")
+    // else
+
+    
 
     let orderBody = [] // Array to pass to db
 
@@ -83,6 +91,11 @@ function collectOrderinfo() // Collecting order details to be sent to Orders DB
 
     console.log(itemId[1].innerHTML)
 
+    if(clname === "" || cfname === "")
+    alert("first and last name are needed")
+    else 
+    {
+    orderBtn.disabled = true; 
     for(i = 0; i < tablecontent.length; i++ )
     {
         if(tablecontent[i].value !== "")
@@ -109,47 +122,69 @@ function collectOrderinfo() // Collecting order details to be sent to Orders DB
 
     axios.post('/createorder',orderBody)   //calling Bulk_Create on Server side
 
-    orderConfirmed(orderId)
+    orderConfirmed(orderId,totalPrice)
+}
+    //testDiv()
 }
 
-function orderConfirmed(ordId)
+function orderConfirmed(ordId,int)
 {
-        //console.log(ordId)
-       // ordId = 565
+      
         let sts = ""
 
         axios.get(`/orderstatus/${ordId}`)
        
         .then((response) => {
-        console.log("STATUS CHECK",response.data[0])
-        sts = response.data[0].status
-        createDiv(sts,ordId)
-        //console.log("LOOK",sts)
+       
+        //sts = response.data[0].status
+        createDiv(ordId,int)
+        
     })
    
         
     }
 
-function createDiv(string,int)    //Creating DIV to display order N and Status
+function createDiv(int,price)    //Creating DIV to display order N and Status
 {
-        console.log("Create DIV",string)
+        //console.log("Create DIV",string)
+    
         var div = document.createElement('div');
-        var checkStatusBtn = document.createElement('button')
-        var statusField = document.createElement("span")
-        statusField.innerHTML = string
-        checkStatusBtn.textContent = "check status"
-
         div.id = "confirm_order"
-        div.innerHTML = "<BR><BR>Your Order N is <BR><BR>" + int
-         + "<BR><BR>Staus..." + string + "<BR></BR>"
+
+        var checkstatusBtn = document.createElement('button')
+
+        //------close window button
+        var closeWindowBtn = document.createElement('button')
+        closeWindowBtn.id = "closebutton"
+        closeWindowBtn.innerHTML = "X"
+       
+
+        //---------end-------------
+
+        var statusField = document.createElement("span")
+        statusField.id = "orderstatus"
+        statusField.innerHTML = ""
+        checkstatusBtn.id = "checkstatusBtn"
+        checkstatusBtn.textContent = "check status"
+
+        
+        div.innerHTML = "order N " + int
+         + " is received " + "Total price $" + price
 
         
         document.body.appendChild(div);
-        div.appendChild(checkStatusBtn)
+        div.appendChild(checkstatusBtn)
+        div.appendChild(closeWindowBtn)
 
        div.appendChild(statusField)
 
-        checkStatusBtn.addEventListener('click', (e)=>{
+        closeWindowBtn.addEventListener('click', (e) =>
+        {
+            document.body.removeChild(e.target.parentNode);
+            location.reload();
+        })
+       
+        checkstatusBtn.addEventListener('click', (e)=>{
             console.log("Checking status - ", int)
 
             //-----------
@@ -158,9 +193,6 @@ function createDiv(string,int)    //Creating DIV to display order N and Status
             .then((response) => {
                 updateDiv(response.data[0])
           
-            //console.log("STATUS CHECK HERE AGAIN",response.data[0])
-           
-            //statusField.innerHTML = "OK"
         })
          
 
@@ -172,8 +204,169 @@ function createDiv(string,int)    //Creating DIV to display order N and Status
 function updateDiv(arr)
 {
     console.log("STATUS CHECK HERE AGAIN",arr)
-    statusField = document.querySelector('span')
+    statusField = document.querySelector('#orderstatus')
     statusField.innerHTML = arr.status
-   //console.log("yu",arr.status)
+   
+    if(arr.status === "READY")
+    {
+    divToinsert = document.getElementById("confirm_order")
+    paymentButton = document.createElement('button')
+    paymentButton.id = "checkstatusBtnPay"
+    paymentButton.innerHTML = "PAY"
+    
+    divToinsert.appendChild(paymentButton)
+    }
 
+
+}
+
+
+//------------TERSTING DIV STYLE----------------------
+function testDiv()
+{
+        // console.log("Create DIV",string)
+        var div = document.createElement('div')
+        div.id = "confirm_order"
+
+        var checkStatusBtn = document.createElement('button')
+
+        var statusField = document.createElement("span")
+
+        statusField.innerHTML = "STRING"
+
+        checkStatusBtn.textContent = "check status"
+
+        checkStatusBtn.id = "checkstatusBtn"
+        
+        div.innerHTML = "your order N  " + 555
+         + " is received" + ""
+
+        
+        document.body.appendChild(div);
+        div.appendChild(checkStatusBtn)
+        div.appendChild(statusField)
+
+}
+
+//-----------------------------------------
+
+
+function ordersearch()
+{
+    lastname = searchinput.value
+    if(lastname === "")
+    alert("last name is needed")
+    else 
+    axios.get(`/searchorder/${lastname}`)
+       
+    .then((response) => {
+        if(response.data.length === 0)
+        alert("NOT FOUND")
+        
+        else if(response.data[0].last_name === lastname)
+        {
+            console.log("IF DATA EXISTS",response.data[0].last_name)
+            createCardDiv(response.data)   
+        }
+        else
+        {
+        console.log(response.data.last_name)
+        alert("Noting Found")
+        }
+        
+    })
+
+
+  
+
+}
+function createCardDiv(arr)
+{
+    console.log("ARR",arr[0].last_name)
+    lastname = searchinput.value
+    
+    searchcardDiv = document.getElementById('searchCards')
+    carddiv = document.createElement('div')
+
+    if(arr[0].status === "received")
+    {
+        carddiv.className = "cards"
+    }
+
+    else
+    {
+        carddiv.className = "cardsready"
+    }
+
+    //carddiv.className = "cards"//arr.[0].last_name
+    
+    searchresultul = document.createElement('p')
+    searchresultul.id = "searchp"
+    searchresultul.innerHTML = "order N- " + arr[0].order_id + "<BR>for -" + arr[0].last_name + "<BR>total price -$" 
+    + arr[0].total_price + "<BR> Status - " + arr[0].status 
+
+   
+    deletecardbtn = document.createElement('button')
+    deletecardbtn.innerText = "close"
+
+    searchcardDiv.appendChild(carddiv)
+    carddiv.appendChild(searchresultul)
+    carddiv.appendChild(deletecardbtn)
+
+    if(arr[0].status === "received")
+    {
+        cardCheckStatusButton = document.createElement('button')
+        cardCheckStatusButton.id = "dummy"
+        cardCheckStatusButton.innerHTML = "check status"
+        carddiv.appendChild(cardCheckStatusButton)
+
+                cardCheckStatusButton.addEventListener('click', (e)=>{
+                axios.get(`/orderstatus/${arr[0].order_id}`)
+           
+                .then((response) => {
+                    if(response.data[0].status === "READY")
+                    {   
+                        delp = document.getElementById('searchp')
+                        delp.innerHTML = searchresultul.innerHTML = "order N- " + arr[0].order_id + "<BR>for -" + arr[0].last_name + "<BR>total price -$" 
+                        + arr[0].total_price + "<BR> Status - " + response.data[0].status
+                        carddiv.className = "cardsready"
+                        carddiv.removeChild(e.target);
+    
+                    }
+                    
+              
+            })
+            })
+
+        }
+
+
+
+        // cardCheckStatusButton.addEventListener('click', (e)=>{
+        //     axios.get(`/orderstatus/${arr[0].order_id}`)
+       
+        //     .then((response) => {
+        //         if(response.data[0].status === "READY")
+        //         {   
+                    // delp = document.getElementById('searchp')
+                    // delp.innerHTML = searchresultul.innerHTML = "order N- " + arr[0].order_id + "<BR>for -" + arr[0].last_name + "<BR>total price -$" 
+                    // + arr[0].total_price + "<BR> Status - " + arr[0].status 
+                    // carddiv.removeChild(e.target);
+
+        //         }
+                
+          
+        // })
+        // })
+
+      
+
+    
+
+    deletecardbtn.addEventListener('click', (e)=>{
+        
+        searchcardDiv.removeChild(e.target.parentNode);
+        
+        
+    })
 }

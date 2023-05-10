@@ -10,28 +10,29 @@
 <body>
     <div class="vl"></div>
     <div id="orders">
-        <button id="seeOrdersbtn">Click Here to see orders</button>
+        <button id="seeOrdersbtn">click Here to see orders</button>
         <ul>
 
         </ul>
     </div>
 
-    <button id="getpizzaitems">Get pizza store items</button>.<BR>
+    <button id="getpizzaitems">get pizza store items</button>.<BR>
     
     <table id="pizzstoreitems" border = "1">
         <tr>
-            <th>Item ID</th>
-            <th>Item Name</th>
-            <th>Item price</th>
-            <th>Delete ?</th>
+            <td class="th">item ID</td>
+            <td class="th">item Name</td>
+            <td class="th">item price</td>
+            <td class="th">delete ?</td>
         </tr>
     </table>
+
     <div id="addpizzaitems">
-        <BR><BR><BR>
-            <hl></hl>
-        Enter new item to the menu...<input id="newItemname"><br>
-        <br>Enter price of the new item...<input type="number" id="newitemprice"><br>
-        <br><button id="additem">Add Item to Menu ?</button><br><br>
+       <div id="underiems">
+        <input id="newItemname" placeholder="item name">
+        <input type="number" maxlength="10" id="newitemprice" placeholder="item price">
+        <br><button id="additem">add item to the Menu ?</button><br>
+    </div>
 
     </div>
 </body>

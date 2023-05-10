@@ -5,35 +5,60 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Welcome to Little Pizza store</title>
+    <body onload="getpizzaitems()"></body>
+    <title>welcome to Little Pizza store</title>
 
-    <p>Hi, WELCOME TO SMALL PIZZA STORE</p>
+   
 </head>
 <body>
-    <a href="./pizzadb.html">
-        Click Here to Work with Pizza DataBase
-    </a>
-    <div id="nameForm">
-        Enter yor first name<BR>
-        <input id="firstName"><BR><BR>
-        Enter your last name<BR>
-        <input id="lastName"><BR><BR>
-        <button id="orderBtn">click here to Order</button>
+    <div id="mimage">
+        <img src="pz.png"/>
+       
+    </div>
+
+    <div id="welcomeDiv"> 
+        <p id="welcomeP">welcome to the small pizza store</p>
+    </div>
+
+    <div id="searchfororders">
+        <input id="searchbylastname" placeholder="enter last name">
+        <button id="searchorderbtn">click to search</button>
+
+    </div>
+
+    <div id="searchCards">
+
+
+    </div>
+   
+    
+
+    <div id="menuItems">
+        
+        <table id="menuTable">
+        <td class="th">item id</td>
+        <td class="th">name</td>
+        <td class="th">price</td>
+        <td class="th">quantity</td>
+    </table>
+
+    <div id="nameForm"><BR>
+        <input id="firstName" placeholder="first name">
+        <input id="lastName" placeholder="last name">
+        <button id="orderBtn">click to Order</button>
+        <button id="getMenu">Click to see our menu</button><br>
+
+        <a href="./pizzadb.html">
+            click Here to Work with Pizza DataBase
+        </a>
             
     </div>
 
-    <div id="menuItems">
-        <button id="getMenu">Click to see our menu</button>
-        <table id="menuTable"></table>
-        <td>Item id</td>
-        <td>Name</td>
-        <td>price</td>
-        <td>Quantity</td>
-
 
     </div>
 
-  
+    
+    <br>
 
    
     

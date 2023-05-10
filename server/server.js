@@ -1,4 +1,4 @@
-//----V5-------------------
+//----V6-------------------5/10/23
 
 const express = require('express')
 const cors = require('cors')
@@ -233,5 +233,34 @@ app.put('/orderstatus/:index',(req,res) => {
 
 })
 
+app.delete('/deletefromorders/:index',(req,res) => {
+    let { index } = req.params
+
+    sequelize.query(`
+    delete from pizza_orders 
+    where order_id = '${index}'
+                `)
+
+    console.log("SERVER",index)
+    
+    res.status(200).send(index)
+})
+
+
+app.get('/searchorder/:index',(req,res) => {
+    let { index } = req.params
+
+    console.log(index)
+    sequelize.query(`
+    select order_id, total_price, last_name, status from pizza_orders 
+    where last_name = '${index}'
+                `).then((dbRes) => {
+                    console.log('REQUESTING ORDERS BY LAST NAME')
+                        console.log(dbRes[0])
+                        res.status(200).send(dbRes[0])
+                   
+                })
+
+})
 
 app.listen(80, () => console.log('UP an RUNNING on 80'))
