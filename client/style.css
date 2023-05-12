@@ -281,12 +281,12 @@ a{
 
 .cards
 {
-  background-color: #db1309;
+  background-color: #c1605b;
   border: 2px solid; 
   border-radius: 10px;
   margin: 15px;
   text-align: center;
-  color: rgb(208, 11, 11);
+  color: rgb(33, 9, 9);
   height: 250px;
   width: 200px;
   z-index: 10;

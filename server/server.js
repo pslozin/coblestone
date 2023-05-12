@@ -1,4 +1,4 @@
-//----V6-------------------5/10/23
+//----V7-------------------5/11/23
 
 const express = require('express')
 const cors = require('cors')
@@ -8,7 +8,7 @@ const path = require('path')
 
 const app = express()
 app.use(express.json());
-app.use(express.static('../client'))
+app.use(express.static('./client'))
 
 
 //-------Creating order model----------
@@ -130,8 +130,8 @@ app.post('/addpizzaitems', (req,res)=>{
 
 
     `).then(() => {
-        console.log('Pizza store items are seeded!')
-        res.json('Pizza store items are seeded!')
+        console.log('Pizza store menu is ready!')
+        res.json('Pizza store menu is ready!')
         })
     
 

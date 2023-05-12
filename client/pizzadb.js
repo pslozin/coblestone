@@ -142,7 +142,11 @@ function seeOrders()
         listItem.id = response.data[index].user_id
         
         if(response.data[index].status === "READY")
+        {
+      
         listItem.className = 'ordready'
+
+        }
         else
         listItem.className = 'orders'
 
@@ -175,7 +179,23 @@ function seeOrders()
 
         deleteBtn.addEventListener('click', (e)=>{
             
+            let idForcapture = response.data[index].user_id
+            allLists = document.querySelectorAll(`li[id="${idForcapture}"]`)
+            
+
+
+            console.log("ODR",allLists.length)
+
+            for(i = 0; i < allLists.length; i++)
+            {
+                allLists[i].className = 'ordready'
+                console.log(allLists[i])
+                deleteBtn.textContent = "READY"
+            }
+
+
             deleteBtn.textContent = "READY"
+
             changeOrderStatus(e.target.id)
             changeli = document.getElementById(e.target.id)
             changeli.className = 'ordready'
